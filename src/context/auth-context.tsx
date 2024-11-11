@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Function to exchange code for token and user data
   const fetchUserData = async (code: string) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/oauth-callback?code=${code}`);
+      const response = await axios.get(`${import.meta.env.VITE_WK_BACKEND_URL}/oauth-callback?code=${code}`);
       setAccessToken(response.data.access_token);
       setUser(response.data.user);
     } catch (error) {
