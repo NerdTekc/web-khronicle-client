@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Redirect to GitHub for login
   const loginWithGithub = () => {
-    window.location.href = `${import.meta.env.VITE_WK_BACKEND_URL}/api/oauth`;
+    window.location.href = `${import.meta.env.VITE_WK_BACKEND_URL}/api/auth`;
   };
 
   // Logout function to clear user data
