@@ -3,10 +3,10 @@ import { IoMoon } from "react-icons/io5";
 import { IoSunny } from "react-icons/io5";
 import localStorageUtil, { StorageKeys } from "../../lib/local-storage";
 
+
 function DarkMode() {
     const [dark, setDark] = useState<boolean>(false);
 
-    // Load theme preference from local storage on component mount
     useEffect(() => {
         const savedTheme = localStorageUtil.getItem<boolean>(StorageKeys.WK_DARK_MODE);
         if (savedTheme) {
@@ -25,11 +25,11 @@ function DarkMode() {
     };
 
     return (
-        <div className="flex items-center justify-center border rounded-xl">
+        <>
             <button onClick={darkModeHandler}>
-                {dark ? <IoSunny /> : <IoMoon />}
+                {dark ? <IoSunny size={24} /> : <IoMoon size={24} />}
             </button>
-        </div>
+        </>
     );
 }
 
