@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import localStorageUtil, { StorageKeys } from "../../lib/local-storage";
 
 interface User {
   id: number;
@@ -25,37 +27,53 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const navigate = useNavigate();
 
-  // Redirect to GitHub for login
   const loginWithGithub = () => {
     window.location.href = `${import.meta.env.VITE_WK_BACKEND_URL}/api/auth`;
   };
 
-  // Logout function to clear user data
   const logout = () => {
     setUser(null);
     setAccessToken(null);
+    localStorageUtil.removeItem(StorageKeys.WK_ACCESS_TOKEN);
+    localStorageUtil.removeItem(StorageKeys.WK_ACCOUNT_ID);
   };
 
-  // Function to exchange code for token and user data
-  const fetchUserData = async (code: string) => {
+  const fetchUserData = async (token: string) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_WK_BACKEND_URL}/oauth-callback?code=${code}`);
-      setAccessToken(response.data.access_token);
-      setUser(response.data.user);
+      const response = await axios.get(`${import.meta.env.VITE_WK_BACKEND_URL}/api/user`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser(response.data);
     } catch (error) {
       console.error("Failed to fetch user data", error);
     }
   };
 
-  // Check for code in URL after GitHub redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("code");
-    if (code) {
-      fetchUserData(code);
+    const token = urlParams.get("t");
+    const accountId = urlParams.get("i");
+
+    if (token && accountId) {
+      localStorageUtil.setItem(StorageKeys.WK_ACCESS_TOKEN, token);
+      localStorageUtil.setItem(StorageKeys.WK_ACCOUNT_ID, accountId);
+
+      setAccessToken(token);
+      fetchUserData(token).then(() => {
+        navigate('/u/dashboard');
+      });
+    } else {
+      const storedToken = localStorageUtil.getItem<string>(StorageKeys.WK_ACCESS_TOKEN);
+      const storedAccountId = localStorageUtil.getItem<string>(StorageKeys.WK_ACCOUNT_ID);
+
+      if (storedToken && storedAccountId) {
+        setAccessToken(storedToken);
+        fetchUserData(storedToken);
+      }
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <AuthContext.Provider value={{ user, accessToken, loginWithGithub, logout }}>
