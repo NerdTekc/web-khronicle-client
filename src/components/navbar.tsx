@@ -9,16 +9,22 @@ function Navbar({ }: NavbarProps) {
         <div className="p-4 backdrop-blur-md z-10 rounded-xl my-4 shadow-sm dark:shadow-[0_0_9px_0_rgba(255,255,255,0.6)]">
             <div className="w-full flex justify-between items-center">
                 <Logo />
-                <ul className="flex items-center justify-center gap-4">
-                    <li className="flex items-center justify-center">
-                        <DarkMode />
-                    </li>
-                    <li className="flex items-center justify-center">
-                        <AiFillGithub size={24} />
-                    </li>
-                </ul>
+                <NavbarList />
             </div>
         </div>
+    )
+}
+
+export function NavbarList() {
+    return (
+        <ul className="flex items-center justify-center gap-4">
+            <li className="flex items-center justify-center">
+                <DarkMode />
+            </li>
+            <li className="flex items-center justify-center">
+                <AiFillGithub size={24} />
+            </li>
+        </ul>
     )
 }
 
@@ -33,4 +39,4 @@ export const Logo = ({ className }: { className?: string }) => {
     )
 }
 
-export default Navbar
+export default Navbar;

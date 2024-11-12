@@ -13,8 +13,8 @@ function Sidebar() {
         <li className="cursor-pointer">
           <NavLink to="/u/dashboard" className={({ isActive }) =>
             isActive
-              ? "flex rounded-md p-2 bg-slate-100 items-center"
-              : "flex rounded-md p-2 hover:bg-slate-100 items-center"}>
+              ? "flex rounded-md p-2 bg-slate-100 text-slate-900 dark:bg-slate-500 dark:text-white items-center"
+              : "flex rounded-md p-2 hover:bg-slate-100 text-slate-900 hover:dark:bg-slate-500 dark:text-white items-center"}>
             <span className="w-[40px]">
               <RiDashboardHorizontalLine size={24} />
             </span>
